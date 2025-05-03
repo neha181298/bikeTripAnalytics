@@ -1,0 +1,9 @@
+requests
+numpy
+pandas
+beautifulsoup4
+urllib3
+pandera
+meteostat
+openpyxl
+
