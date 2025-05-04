@@ -208,6 +208,15 @@ def process_and_clean_city_data(
     station_data_path: str,
     cleaned_data_dir: str
 ):
+    """
+    Process and clean bike trip data for a specific city.
+    Parameters:
+    ----------
+    city (str): The name of the city.
+    trip_data_path (str): Path to the trip data CSV file.
+    station_data_path (str): Path to the station data CSV file.
+    cleaned_data_dir (str): Directory to save cleaned data. 
+    """
     # Load trip and station data for the city
     logger.info(f"Cleaning data for {city}...")
 
@@ -285,6 +294,13 @@ def process_and_clean_city_data(
 
 
 def process_all_cities_data(raw_data_dir: str, cleaned_data_dir: str):
+    """
+    Process and clean bike trip data for all cities.
+    Parameters:
+    ----------
+    raw_data_dir (str): Directory containing raw data.
+    cleaned_data_dir (str): Directory to save cleaned data.
+    """
     os.makedirs(cleaned_data_dir, exist_ok=True)
 
     # Define the list of cities and their data paths

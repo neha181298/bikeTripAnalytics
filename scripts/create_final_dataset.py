@@ -2,6 +2,7 @@ import pandas as pd
 import os
 import logging
 from datetime import datetime
+from config import BIKESHARE_DATASOURCES
 
 # Set up logging
 logging.basicConfig(level=logging.INFO)
@@ -20,7 +21,7 @@ def aggregate_bike_trip_data(cleaned_data_dir: str) -> pd.DataFrame:
     --------
     pd.DataFrame: Aggregated DataFrame with total trips per city and date.
     """
-    cities = ["NYC", "Chicago", "Boston", "Capital"]
+    cities = BIKESHARE_DATASOURCES.keys()  # Get the list of cities from the config
 
     all_dfs = []
     # Iterate through the list of cities

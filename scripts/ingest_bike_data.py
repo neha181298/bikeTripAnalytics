@@ -14,7 +14,7 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 
-def ingest_bikeshare_data(s3_bucket_url, filenames, output_dir):
+def ingest_bikeshare_data(s3_bucket_url, filenames, raw_data_dir):
     """
     Ingests bikeshare data from various sources and saves them to CSV files.
 
@@ -29,16 +29,17 @@ def ingest_bikeshare_data(s3_bucket_url, filenames, output_dir):
     bool: Status indicating the success (True) or failure (False) of the process.
     """
 
-    os.makedirs(output_dir, exist_ok=True)
+    os.makedirs(raw_data_dir, exist_ok=True)
 
     for filename in filenames:
         file_url = s3_bucket_url + filename
         month = filename.split("-")[0]  # e.g., "202409"
-        month_dir = os.path.join(output_dir, month)
+        month_dir = os.path.join(raw_data_dir, month)
         os.makedirs(month_dir, exist_ok=True)
 
         logger.info(f"Downloading: {filename}")
         response = requests.get(file_url)
+        response.raise_for_status()
         zip_file = zipfile.ZipFile(io.BytesIO(response.content))
 
         # Get CSVs, ignoring system files
@@ -75,7 +76,7 @@ def ingest_city_station_data(
     endpoint: str,
     city: str,
     source_type: str,
-    output_dir: str,
+    raw_data_dir: str,
     filename: Optional[str] = None,
     limit: int = 50000,
 ) -> str:
@@ -96,10 +97,10 @@ def ingest_city_station_data(
     str: The path to the saved CSV file.
 
     """
-    os.makedirs(output_dir, exist_ok=True)
+    os.makedirs(raw_data_dir, exist_ok=True)
     if filename is None:
         filename = "stations.csv"
-    output_path = os.path.join(output_dir, filename)
+    output_path = os.path.join(raw_data_dir, filename)
 
     xlsx_path = None
     source = source_type.lower()
@@ -142,7 +143,7 @@ def ingest_city_station_data(
             else urljoin(endpoint, href)
         )
         xlsx_name = os.path.basename(xlsx_url)
-        xlsx_path = os.path.join(output_dir, xlsx_name)
+        xlsx_path = os.path.join(raw_data_dir, xlsx_name)
         with requests.get(xlsx_url, stream=True) as r:
             r.raise_for_status()
             with open(xlsx_path, "wb") as f:
@@ -177,39 +178,39 @@ def ingest_city_station_data(
     return
 
 
-def ingest_all_bikeshare_data(root_output_dir: str) -> None:
+def ingest_all_bikeshare_data(raw_data_dir: str) -> None:
     """
     Ingests all bikeshare data for the specified cities and saves them to CSV files.    
     Parameters:
     -----------
     root_output_dir (str): The base directory where the CSV files will be saved.
     """
-    # Ensure the root output directory exists
-    os.makedirs(root_output_dir, exist_ok=True)  
+    # Ensure the raw output directory exists
+    os.makedirs(raw_data_dir, exist_ok=True)  
 
     logger.info("Ingesting all bikeshare data...")
 
     # Ingest trip data and station data for each city
     for city, config in BIKESHARE_DATASOURCES.items():
-        trip_output_dir = os.path.join(root_output_dir, city, "trip_data")
+        trip_output_dir = os.path.join(raw_data_dir, city, "trip_data")
         os.makedirs(trip_output_dir, exist_ok=True)  # Ensure the output directory exists
 
         logger.info(f"Ingesting trip data for {city}")
         ingest_bikeshare_data(
             s3_bucket_url=config["trip_data"]["base_url"],
             filenames=config["trip_data"]["filenames"],
-            output_dir=trip_output_dir
+            raw_data_dir=trip_output_dir
         )
         logger.info(f"Trip data for {city} ingested successfully.")
 
-        station_output_dir = os.path.join(root_output_dir, city, "station_data")
+        station_output_dir = os.path.join(raw_data_dir, city, "station_data")
         os.makedirs(station_output_dir, exist_ok=True)  # Ensure the output directory exists
         logger.info(f"Ingesting station data for {city}")
         ingest_city_station_data(
             endpoint=config["station_data"]["endpoint"],
             city=city,
             source_type=config["station_data"]["source_type"],
-            output_dir=station_output_dir,
+            raw_data_dir=station_output_dir,
             filename=config.get("station_data", {}).get("filename", None)
         )
         
@@ -223,10 +224,10 @@ if __name__ == "__main__":
     script_dir = os.path.dirname(os.path.realpath(__file__))
 
     # Define root_output_dir to be outside the script's directory
-    root_output_dir = os.path.join(script_dir, "..", "raw_data")
+    raw_data_dir = os.path.join(script_dir, "..", "raw_data")
 
     # Normalize the path to resolve any '..' components
-    root_output_dir = os.path.abspath(root_output_dir)
+    raw_data_dir = os.path.abspath(raw_data_dir)
 
-    ingest_all_bikeshare_data(root_output_dir)
+    ingest_all_bikeshare_data(raw_data_dir)
     

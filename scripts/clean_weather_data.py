@@ -52,11 +52,11 @@ if __name__ == "__main__":
     script_dir = os.path.dirname(os.path.realpath(__file__))
 
     # Define root_output_dir to be outside the script's directory
-    raw_output_dir = os.path.join(script_dir, "..", "raw_data")
-    cleaned_output_dir = os.path.join(script_dir, "..", "cleaned_data")
+    raw_data_dir = os.path.join(script_dir, "..", "raw_data")
+    cleaned_data_dir = os.path.join(script_dir, "..", "cleaned_data")
 
     # Normalize the path to resolve any '..' components
-    raw_output_dir = os.path.abspath(raw_output_dir)
-    cleaned_output_dir = os.path.abspath(cleaned_output_dir)
+    raw_data_dir = os.path.abspath(raw_data_dir)
+    cleaned_data_dir = os.path.abspath(cleaned_data_dir)
 
-    weather_data = clean_weather_data(raw_output_dir, cleaned_output_dir)
+    weather_data = clean_weather_data(raw_data_dir, cleaned_data_dir)

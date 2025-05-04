@@ -1,3 +1,6 @@
+from meteostat import Point
+from datetime import datetime
+
 BIKESHARE_DATASOURCES = {
     "NYC": {
         "trip_data": {
@@ -41,3 +44,30 @@ BIKESHARE_DATASOURCES = {
     }
 }
 
+# City-specific configuration (can be extended later)
+WEATHER_CONFIG = {
+    "NYC": {
+        "label": "NYC",
+        "coordinates": Point(40.7128, -74.0060),
+        "start_date": datetime(2024, 8, 31),
+        "end_date": datetime(2024, 9, 30),
+    },
+    "Chicago": {
+        "label": "Chicago",
+        "coordinates": Point(41.8781, -87.6298),
+        "start_date": datetime(2024, 8, 31),
+        "end_date": datetime(2024, 9, 30),
+    },
+    "Capital": {
+        "label": "Capital",
+        "coordinates": Point(38.9072, -77.0369),
+        "start_date": datetime(2024, 8, 31),
+        "end_date": datetime(2024, 9, 30),
+    },
+    "Boston": {
+        "label": "Boston",
+        "coordinates": Point(42.3601, -71.0589),
+        "start_date": datetime(2024, 8, 31),
+        "end_date": datetime(2024, 9, 30),
+    }
+}

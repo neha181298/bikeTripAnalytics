@@ -4,6 +4,7 @@ import os
 import pandas as pd
 from meteostat import Daily, Point
 from datetime import datetime
+from config import WEATHER_CONFIG
 
 warnings.simplefilter(action='ignore', category=FutureWarning)
 
@@ -11,40 +12,12 @@ warnings.simplefilter(action='ignore', category=FutureWarning)
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-# City-specific configuration (can be extended later)
-city_config = {
-    "NYC": {
-        "label": "NYC",
-        "coordinates": Point(40.7128, -74.0060),
-        "start_date": datetime(2024, 8, 31),
-        "end_date": datetime(2024, 9, 30),
-    },
-    "Chicago": {
-        "label": "Chicago",
-        "coordinates": Point(41.8781, -87.6298),
-        "start_date": datetime(2024, 8, 31),
-        "end_date": datetime(2024, 9, 30),
-    },
-    "Capital": {
-        "label": "Capital",
-        "coordinates": Point(38.9072, -77.0369),
-        "start_date": datetime(2024, 8, 31),
-        "end_date": datetime(2024, 9, 30),
-    },
-    "Boston": {
-        "label": "Boston",
-        "coordinates": Point(42.3601, -71.0589),
-        "start_date": datetime(2024, 8, 31),
-        "end_date": datetime(2024, 9, 30),
-    }
-}
-
-def ingest_weather_data(city_config: dict, root_output_dir) -> pd.DataFrame:
+def ingest_weather_data(raw_data_dir, city_config: dict = WEATHER_CONFIG) -> pd.DataFrame:
     """
     Fetches weather data for multiple cities and returns a consolidated DataFrame.
     Includes error handling for network, data, and parsing issues.
     """
-    output_path = os.path.join(root_output_dir,"weather_data.csv")
+    output_path = os.path.join(raw_data_dir,"weather_data.csv")
     # 1. Initialize a list to store all DataFrames
     all_dfs = []
 
@@ -108,9 +81,9 @@ if __name__ == "__main__":
     script_dir = os.path.dirname(os.path.realpath(__file__))
 
     # Define root_output_dir to be outside the script's directory
-    root_output_dir = os.path.join(script_dir, "..", "raw_data")
+    raw_data_dir = os.path.join(script_dir, "..", "raw_data")
 
     # Normalize the path to resolve any '..' components
-    root_output_dir = os.path.abspath(root_output_dir)
+    raw_data_dir = os.path.abspath(raw_data_dir)
 
-    weather_data = ingest_weather_data(city_config, root_output_dir)
+    ingest_weather_data(raw_data_dir)
