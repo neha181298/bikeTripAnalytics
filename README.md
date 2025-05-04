@@ -14,8 +14,7 @@ This project analyzes bike trip data, combining it with weather information to i
 
 ## Prerequisites
 
-*   **Python 3.8+**
-*   **Poetry** (Recommended for dependency management) - [https://python-poetry.org/docs/](https://python-poetry.org/docs/)
+*   **Python 3.9+**
 
 ## Setup and Installation
 
