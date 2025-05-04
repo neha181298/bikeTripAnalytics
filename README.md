@@ -104,7 +104,3 @@ The raw data is stored in the `raw_data/` directory, the cleaned data is stored 
 
 The `workflow_orchestrator.py` script includes basic error handling. If any step in the pipeline fails, the script will log an error message and stop further execution. More sophisticated error handling (e.g., sending email notifications, retrying failed tasks) can be added as needed.
 
-## Contributing
-
-Contributions to this project are welcome! Please submit a pull request with your changes.
-
