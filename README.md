@@ -27,50 +27,11 @@ This project analyzes bike trip data, combining it with weather information to i
 
 2.  **Install dependencies:**
 
-    *   **Using Poetry (Recommended):**
-
-        ```bash
-        poetry install
-        ```
-
     *   **Using pip:**
 
         ```bash
         pip install -r requirements.txt
         ```
-
-3.  **Configure the project:**
-
-    *   Create a `config.py` file (if it doesn't exist) based on the example below.  Populate it with the correct API keys, file paths, and data source URLs for your specific setup.
-
-    ```python
-    # filepath: config.py
-    BIKESHARE_DATASOURCES = {
-        "city1": {
-            "trip_data": {
-                "base_url": "...",
-                "filenames": ["...", "..."]
-            },
-            "station_data": {
-                "endpoint": "...",
-                "source_type": "...",
-                "filename": "..."
-            }
-        },
-        # Add configurations for other cities
-    }
-
-    WEATHER_CONFIG = {
-        "your_city": {  # Replace "your_city" with the actual city name
-            "source_type": "api",  # or "file"
-            "api_url": "...",  # If source_type is "api"
-            "file_path": "...", # If source_type is "file"
-            "output_filename": "weather_data.csv"
-        }
-    }
-    ```
-
-    *   **Important:**  Store any API keys or sensitive information securely (e.g., using environment variables or a dedicated secrets management solution).  Do *not* commit sensitive information directly to the repository.
 
 ## Data Ingestion
 
